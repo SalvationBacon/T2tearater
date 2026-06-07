@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>T2 Tea Ratings</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.8.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --t2o:#FF5C00;--t2olt:#FFF0E8;--t2om:#FFCFB3;
+  --t2k:#111;--t2w:#fff;--t2wm:#FAF7F4;--t2bd:#EDE8E2;--t2mu:#999;--t2hdr:#111;
+}
+.dark{
+  --t2k:#F0EDE8;--t2w:#1C1A18;--t2wm:#141210;--t2bd:#2E2A26;--t2mu:#666;
+  --t2olt:#2A1A0E;--t2om:#6B3010;--t2hdr:#0A0908;
+}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--t2wm);overflow:hidden;transition:background 0.2s;}
+.shell{width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--t2wm);position:relative;transition:background 0.2s;}
+.hdr{background:var(--t2hdr);padding:14px 16px 12px;flex-shrink:0;transition:background 0.2s;}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.wm{font-size:24px;font-weight:600;color:#fff;line-height:1;letter-spacing:-0.01em;}
+.wm em{color:var(--t2o);font-style:normal;}
+.wsub{font-size:9px;letter-spacing:0.13em;color:rgba(255,255,255,0.32);text-transform:uppercase;margin-top:3px;}
+.hbtns{display:flex;gap:8px;margin-top:4px;}
+.hb{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.4);font-size:20px;padding:0;line-height:1;transition:color 0.12s;}
+.hb:hover,.hb.on{color:var(--t2o);}
+.srch{position:relative;}
+.srch input{width:100%;padding:9px 12px 9px 34px;border-radius:8px;border:none;background:rgba(255,255,255,0.1);color:#fff;font-size:14px;outline:none;font-family:inherit;}
+.srch input::placeholder{color:rgba(255,255,255,0.28);}
+.srch input:focus{background:rgba(255,255,255,0.15);}
+.srch i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.32);font-size:16px;pointer-events:none;}
+.fbar{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;scrollbar-width:none;background:var(--t2hdr);border-bottom:2.5px solid var(--t2o);flex-shrink:0;transition:background 0.2s;}
+.fbar::-webkit-scrollbar{display:none;}
+.ft{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.17);font-size:11px;white-space:nowrap;cursor:pointer;color:rgba(255,255,255,0.48);background:transparent;font-family:inherit;transition:all 0.12s;}
+.ft.on{background:var(--t2o);border-color:var(--t2o);color:#fff;}
+.tbar{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;background:var(--t2w);border-bottom:1px solid var(--t2bd);flex-shrink:0;transition:background 0.2s,border-color 0.2s;}
+.sw{display:flex;align-items:center;gap:6px;}
+.sw label{font-size:9px;color:var(--t2mu);text-transform:uppercase;letter-spacing:0.08em;}
+.sw select{font-size:12px;border:1px solid var(--t2bd);border-radius:6px;padding:3px 6px;color:var(--t2k);background:var(--t2w);font-family:inherit;outline:none;transition:background 0.2s,color 0.2s,border-color 0.2s;}
+.sw select:focus{border-color:var(--t2o);}
+.clbl{font-size:10px;color:var(--t2mu);}
+.clbl b{color:var(--t2o);font-weight:600;}
+.sbar{display:grid;grid-template-columns:repeat(4,1fr);background:var(--t2w);border-bottom:1px solid var(--t2bd);flex-shrink:0;transition:background 0.2s,border-color 0.2s;}
+.sc{padding:8px 4px;text-align:center;border-right:1px solid var(--t2bd);}
+.sc:last-child{border:none;}
+.sn{font-size:16px;font-weight:600;color:var(--t2k);}
+.sn.o{color:var(--t2o);}
+.sl{font-size:8px;color:var(--t2mu);text-transform:uppercase;letter-spacing:0.07em;margin-top:1px;}
+.sc-btn{cursor:pointer;transition:background 0.12s;}
+.sc-btn:hover{background:var(--t2olt);}
+.sc-btn.sc-on{background:var(--t2olt);}
+.sc-btn.sc-on .sn{color:var(--t2o);}
+.sc-btn.sc-on .sl{color:var(--t2o);}
+.lst{flex:1;overflow-y:auto;padding:10px 13px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch;}
+.lst::-webkit-scrollbar{width:3px;}
+.lst::-webkit-scrollbar-thumb{background:var(--t2om);border-radius:2px;}
+.crd{background:var(--t2w);border:1px solid var(--t2bd);border-radius:12px;overflow:hidden;flex-shrink:0;transition:border-color 0.15s,background 0.2s;}
+.crd:active{border-color:var(--t2om);}
+.crd.rated{border-left:3px solid var(--t2o);}
+.crd.wished{border-left:3px solid #7B8FF5;}
+.crd.rated.wished{border-left:3px solid var(--t2o);}
+.ctop{display:flex;gap:10px;padding:11px;cursor:pointer;}
+.imgw{width:58px;height:58px;flex-shrink:0;border-radius:8px;overflow:hidden;background:var(--t2olt);display:flex;align-items:center;justify-content:center;}
+.imgw img{width:100%;height:100%;object-fit:cover;}
+.ifb{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;gap:2px;}
+.ifb i{font-size:20px;color:var(--t2om);}
+.ifb span{font-size:7px;color:var(--t2om);text-transform:uppercase;letter-spacing:0.06em;}
+.ci{flex:1;min-width:0;}
+.tb{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:0.09em;padding:2px 7px;border-radius:9px;font-weight:600;margin-bottom:3px;}
+.tb.Black{background:#F0EBE3;color:#5A3E2B;}
+.tb.Green{background:#E8F3E0;color:#2D6A1F;}
+.tb.Herbal{background:#E8F2EE;color:#1A6650;}
+.tb.Fruit{background:#FEF0E6;color:#B84500;}
+.tb.Chai{background:#FDF3E3;color:#8B4A0E;}
+.tb.Oolong{background:#EEE8F5;color:#5C3A8A;}
+.tb.Rooibos{background:#FDE8E8;color:#A02020;}
+.tb.White{background:#F3F0FB;color:#4A3A7A;}
+.tb.Wellness{background:#E8F5F0;color:#0F5E45;}
+.dark .tb.Black{background:#2A1F18;color:#C9A882;}
+.dark .tb.Green{background:#162310;color:#7BBD5A;}
+.dark .tb.Herbal{background:#112218;color:#5BAF8A;}
+.dark .tb.Fruit{background:#2A1608;color:#E08040;}
+.dark .tb.Chai{background:#241808;color:#C88A40;}
+.dark .tb.Oolong{background:#1E1628;color:#A880D0;}
+.dark .tb.Rooibos{background:#280F0F;color:#D06060;}
+.dark .tb.White{background:#1A1628;color:#9080C8;}
+.dark .tb.Wellness{background:#0E2218;color:#50A878;}
+.cn{font-size:13px;font-weight:600;color:var(--t2k);line-height:1.3;margin-bottom:2px;}
+.cm{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.cprice{font-size:11px;font-weight:600;color:var(--t2o);}
+.rb{font-size:9px;padding:2px 7px;border-radius:7px;background:var(--t2o);color:#fff;font-weight:600;}
+.wb{font-size:9px;padding:2px 7px;border-radius:7px;background:#EEF0FF;color:#4455CC;font-weight:600;}
+.dark .wb{background:#1A1E40;color:#8899EE;}
+.cd{font-size:10px;color:var(--t2mu);margin-top:2px;}
+.cr{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;padding-left:2px;}
+.wbt{background:none;border:none;cursor:pointer;font-size:19px;color:var(--t2bd);padding:0;line-height:1;transition:color 0.15s;}
+.wbt.on{color:#7B8FF5;}
+.chv{font-size:14px;color:var(--t2mu);}
+.cpnl{display:none;padding:13px;border-top:1px solid var(--t2bd);background:var(--t2wm);transition:background 0.2s;}
+.cpnl.open{display:block;}
+.rlbl{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--t2mu);text-align:center;margin-bottom:8px;}
+.nbr{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:11px;}
+.nb{width:32px;height:32px;border-radius:50%;border:1px solid var(--t2bd);font-size:12px;cursor:pointer;color:var(--t2mu);background:var(--t2w);font-family:inherit;transition:all 0.1s;}
+.nb:hover{border-color:var(--t2o);color:var(--t2o);}
+.nb.sel{background:var(--t2o);border-color:var(--t2o);color:#fff;font-weight:700;}
+.cmt{width:100%;padding:8px 10px;border:1px solid var(--t2bd);border-radius:8px;font-size:13px;color:var(--t2k);background:var(--t2w);resize:none;font-family:inherit;min-height:52px;outline:none;line-height:1.5;transition:background 0.2s,color 0.2s,border-color 0.2s;}
+.cmt:focus{border-color:var(--t2o);}
+.pbtns{display:flex;gap:7px;margin-top:8px;}
+.svb{flex:1;padding:9px;border-radius:8px;background:var(--t2o);border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.12s;}
+.svb:active{background:#e05000;}
+.clb{padding:9px 12px;border-radius:8px;background:var(--t2w);border:1px solid var(--t2bd);color:var(--t2mu);font-size:13px;cursor:pointer;font-family:inherit;transition:all 0.12s;}
+.clb:active{border-color:#e05000;color:#e05000;}
+.lnk{margin-top:8px;text-align:center;}
+.t2l{font-size:11px;color:var(--t2o);text-decoration:none;display:inline-flex;align-items:center;gap:3px;}
+.fab{position:absolute;bottom:16px;right:16px;width:40px;height:40px;border-radius:50%;background:var(--t2o);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;opacity:0;pointer-events:none;transition:opacity 0.2s;box-shadow:0 3px 12px rgba(255,92,0,0.35);}
+.fab.show{opacity:1;pointer-events:auto;}
+.mbg{position:absolute;inset:0;background:rgba(0,0,0,0.6);z-index:20;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.mbg.show{opacity:1;pointer-events:auto;}
+.mdl{background:var(--t2w);border-radius:16px 16px 0 0;padding:20px 16px 32px;width:100%;max-height:78%;overflow-y:auto;transition:background 0.2s;}
+.mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.mtit{font-size:15px;font-weight:600;color:var(--t2k);}
+.mclose{background:none;border:none;font-size:20px;cursor:pointer;color:var(--t2mu);padding:0;line-height:1;}
+.etxt{width:100%;padding:10px;border:1px solid var(--t2bd);border-radius:8px;font-size:11px;color:var(--t2k);background:var(--t2wm);font-family:'Menlo','Courier New',monospace;resize:none;min-height:180px;outline:none;line-height:1.7;transition:background 0.2s,color 0.2s;}
+.cpb{width:100%;margin-top:9px;padding:11px;border-radius:8px;background:var(--t2o);border:none;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.cpb:active{background:#e05000;}
+.toast{position:absolute;bottom:68px;left:50%;transform:translateX(-50%);background:var(--t2hdr);color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:30;border-left:3px solid var(--t2o);white-space:nowrap;}
+.toast.show{opacity:1;}
+.empty{text-align:center;padding:40px;color:var(--t2mu);font-size:14px;}
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+  <div class="hdr">
+    <div class="hdr-top">
+      <div>
+        <div class="wm">T<em>2</em></div>
+        <div class="wsub">Tea Ratings</div>
+      </div>
+      <div class="hbtns">
+        <button class="hb" id="wfBtn" title="Show wishlist only" onclick="toggleWF()"><i class="ti ti-bookmark"></i></button>
+        <button class="hb" title="Export ratings" onclick="openExp()"><i class="ti ti-upload"></i></button>
+        <button class="hb" id="dmBtn" title="Toggle dark mode" onclick="toggleDark()"><i class="ti ti-moon"></i></button>
+      </div>
+    </div>
+    <div class="srch">
+      <i class="ti ti-search"></i>
+      <input type="text" id="srch" placeholder="Search name, type or flavour…" oninput="render()">
+    </div>
+  </div>
+  <div class="fbar" id="fbar"></div>
+  <div class="tbar">
+    <div class="sw">
+      <label>Sort</label>
+      <select id="srt" onchange="render()">
+        <option value="def">Featured</option>
+        <option value="rd">Rating: high → low</option>
+        <option value="ra">Rating: low → high</option>
+        <option value="az">A → Z</option>
+        <option value="za">Z → A</option>
+        <option value="pa">Price: low → high</option>
+        <option value="pd">Price: high → low</option>
+      </select>
+    </div>
+    <div class="clbl" id="clbl"></div>
+  </div>
+  <div class="sbar" id="sbar"></div>
+  <div class="lst" id="lst" onscroll="onScr()"></div>
+  <button class="fab" id="fab" onclick="goTop()" aria-label="Back to top"><i class="ti ti-arrow-up"></i></button>
+  <div class="mbg" id="mbg" onclick="closeExp()">
+    <div class="mdl" onclick="event.stopPropagation()">
+      <div class="mhdr">
+        <div class="mtit">Export ratings</div>
+        <button class="mclose" onclick="closeExp()"><i class="ti ti-x"></i></button>
+      </div>
+      <textarea class="etxt" id="etxt" readonly></textarea>
+      <button class="cpb" onclick="doCopy()">Copy to clipboard</button>
+    </div>
+  </div>
+  <div class="toast" id="tst"></div>
+</div>
+
+<script>
+const IM="https://www.t2tea.com/cdn/shop/files/";
+const UB="https://www.t2tea.com/products/";
+
+const TEAS=[
+  {id:1, name:"Spa Day",              type:"Herbal",  price:35, flavour:"Floral | Citrus Zest | Fruity",         sku:"T131AI010", slug:"spa-day-loose-leaf-tin-100g"},
+  {id:2, name:"Melbourne Breakfast",  type:"Black",   price:22, flavour:"Vanilla | Malt | Sweet",                sku:"T125AE023", slug:"melbourne-breakfast-loose-leaf-cube-100g"},
+  {id:3, name:"French Earl Grey",     type:"Black",   price:22, flavour:"Bergamot | Tropical | Fruity",          sku:"T125AE018", slug:"french-earl-grey-loose-leaf-cube-100g"},
+  {id:4, name:"English Breakfast",    type:"Black",   price:18, flavour:"Citrus | Malt | Bright",                sku:"T120AE007", slug:"english-breakfast-loose-leaf-cube-100g"},
+  {id:5, name:"The Quiet Mind",       type:"Wellness",price:26, flavour:"Herbal | Floral | Tree fruit",          sku:"T141AE008", slug:"the-quiet-mind-loose-leaf-cube-50g"},
+  {id:6, name:"Scots Breakfast",      type:"Black",   price:22, flavour:"Oats | Burnt sugar | Malt",             sku:"T125AE196", slug:"scots-breakfast-loose-leaf-cube-100g"},
+  {id:7, name:"Singapore Breakfast",  type:"Black",   price:22, flavour:"Toasted coconut | Molasses | Earth",    sku:"T125AE164", slug:"singapore-breakfast-loose-leaf-cube-100g"},
+  {id:8, name:"Packs a Peach",        type:"Fruit",   price:22, flavour:"Tart | Tree fruit | Sweet",             sku:"T130AE057", slug:"packs-a-peach-loose-leaf-cube-100g"},
+  {id:9, name:"Canberra Breakfast",   type:"Black",   price:22, flavour:"Cocoa | Biscuit | Sweet",               sku:"T125AE156", slug:"canberra-breakfast-loose-leaf-cube-100g"},
+  {id:10,name:"Sydney Breakfast",     type:"Black",   price:22, flavour:"Citrus | Malt | Bright",                sku:"T125AE028", slug:"sydney-breakfast-loose-leaf-cube-100g"},
+  {id:11,name:"Blue Mountain",        type:"Black",   price:22, flavour:"Floral | Fruity | Bright",              sku:"T125AE004", slug:"blue-mountain-loose-leaf-cube-100g"},
+  {id:12,name:"Just Peppermint",      type:"Herbal",  price:18, flavour:"Menthol | Sweet",                       sku:"T140AE022", slug:"just-peppermint-loose-leaf-cube-50g"},
+  {id:13,name:"Green Rose",           type:"Green",   price:22, flavour:"Floral | Tropical | Fruity",            sku:"T115AE010", slug:"green-rose-loose-leaf-cube-100g"},
+  {id:14,name:"Gorgeous Geisha",      type:"Green",   price:22, flavour:"Strawberry | Fruity | Vegetal",         sku:"T115AE009", slug:"gorgeous-geisha-loose-leaf-cube-100g"},
+  {id:15,name:"Earl Grey",            type:"Black",   price:18, flavour:"Bergamot | Citrus | Bright",            sku:"T125AE015", slug:"earl-grey-loose-leaf-cube-100g"},
+  {id:16,name:"Sleep Tight",          type:"Wellness",price:22, flavour:"Citrus | Floral | Wood",                sku:"T140AE028", slug:"sleep-tight-loose-leaf-cube-50g"},
+  {id:17,name:"White Jasmine",        type:"White",   price:26, flavour:"Hay | Vegetal | Floral",                sku:"T100AE013", slug:"white-jasmine-loose-leaf-cube-50g"},
+  {id:18,name:"Madagascan Vanilla",   type:"Black",   price:22, flavour:"Vanilla | Sweet | Bright",              sku:"T125AE021", slug:"madagascan-vanilla-loose-leaf-cube-100g"},
+  {id:19,name:"Lapsang Souchong",     type:"Black",   price:22, flavour:"Ash | Sweet | Smoky",                   sku:"T120AE013", slug:"lapsang-souchong-loose-leaf-cube-100g"},
+  {id:20,name:"Really Russian Caravan",type:"Black",  price:22, flavour:"Malt | Sweet | Smoky",                  sku:"T120AE020", slug:"really-russian-caravan-loose-leaf-cube-100g"},
+  {id:21,name:"Apple Crumble",        type:"Fruit",   price:22, flavour:"Cinnamon | Red apple | Tart",           sku:"T130AE034", slug:"apple-crumble-loose-leaf-cube-100g"},
+  {id:22,name:"Pumping Pomegranate",  type:"Fruit",   price:22, flavour:"Candy | Tree fruit | Tart",             sku:"T130AE030", slug:"pumping-pomegranate-loose-leaf-cube-100g"},
+  {id:23,name:"Sticky Date Delight",  type:"Green",   price:22, flavour:"Tree fruit | Burnt sugar | Sweet",      sku:"T135AE035", slug:"sticky-date-delight-loose-leaf-cube-100g"},
+  {id:24,name:"Gingernut Chai",       type:"Chai",    price:22, flavour:"Malt | Ginger | Spicy",                 sku:"T125AE255", slug:"gingernut-chai-loose-leaf-cube-100g"},
+  {id:25,name:"Black Rose",           type:"Black",   price:22, flavour:"Rose | Tropical | Bright",              sku:"T125AE003", slug:"black-rose-loose-leaf-cube-100g"},
+  {id:26,name:"Nighty Night",         type:"Wellness",price:22, flavour:"Hay | Menthol | Floral",                sku:"T140AE020", slug:"nighty-night-loose-leaf-cube-50g"},
+  {id:27,name:"Fruitalicious",        type:"Fruit",   price:22, flavour:"Tart | Tropical | Fruity",              sku:"T130AE018", slug:"fruitalicious-loose-leaf-cube-100g"},
+  {id:28,name:"Assam",                type:"Black",   price:18, flavour:"Molasses | Malt | Bright",              sku:"T120AE002", slug:"assam-loose-leaf-cube-100g"},
+  {id:29,name:"Spi Chai",             type:"Chai",    price:22, flavour:"Star anise | Sweet | Spicy",            sku:"T140AE030", slug:"spi-chai-loose-leaf-cube-100g"},
+  {id:30,name:"Caramel Brownie",      type:"Black",   price:22, flavour:"Cocoa | Caramel | Sweet",               sku:"T125AE124", slug:"caramel-brownie-loose-leaf-cube-100g"},
+  {id:31,name:"Just Ginger",          type:"Herbal",  price:18, flavour:"Ginger | Earth | Spicy",                sku:"T140AE014", slug:"just-ginger-loose-leaf-cube-100g"},
+  {id:32,name:"Chai",                 type:"Chai",    price:22, flavour:"Star anise | Spicy | Sweet",            sku:"T125AE008", slug:"chai-loose-leaf-cube-100g"},
+  {id:33,name:"Lamington",            type:"Black",   price:22, flavour:"Coconut | Berry | Cocoa",               sku:"T126AE011", slug:"lamington-loose-leaf-cube-100g"},
+  {id:34,name:"Just Rose",            type:"Herbal",  price:18, flavour:"Freshly cut grass | Rose | Floral",     sku:"T140AE026", slug:"just-rose-loose-leaf-cube-50g"},
+  {id:35,name:"Wakey Wakey",          type:"Wellness",price:22, flavour:"Sweet | Menthol | Earth",               sku:"T140AE205", slug:"wakey-wakey-loose-leaf-cube-100g"},
+  {id:36,name:"Very Berry Fruitea",   type:"Fruit",   price:22, flavour:"Floral | Berry | Tart",                 sku:"T130AE010", slug:"very-berry-fruitea-loose-leaf-cube-100g"},
+  {id:37,name:"Melbourne Grey",       type:"Black",   price:22, flavour:"Bergamot | Vanilla | Malt",             sku:"T126AE034", slug:"melbourne-grey-loose-leaf-cube-100g"},
+  {id:38,name:"Tummy Tea",            type:"Wellness",price:22, flavour:"Smooth | Menthol | Sweet",              sku:"T140AE031", slug:"tummy-tea-loose-leaf-cube-50g"},
+  {id:39,name:"Red (Rooibos)",        type:"Rooibos", price:22, flavour:"Honey | Nutty | Sweet",                 sku:"T135AE004", slug:"red-rooibos-loose-leaf-cube-100g"},
+  {id:40,name:"Morning Sunshine",     type:"Black",   price:22, flavour:"Molasses | Malt | Bright",              sku:"T120AE079", slug:"morning-sunshine-loose-leaf-cube-100g"},
+  {id:41,name:"Liquorice Legs",       type:"Herbal",  price:22, flavour:"Liquorice | Menthol | Sweet",           sku:"T140AE018", slug:"liquorice-legs-loose-leaf-cube-100g"},
+  {id:42,name:"Lemongrass and Ginger",type:"Herbal",  price:18, flavour:"Zest | Spicy | Citrus",                 sku:"T140AE017", slug:"lemongrass-and-ginger-loose-leaf-cube-100g"},
+  {id:43,name:"Creme Brulee",         type:"Black",   price:22, flavour:"Hazelnut | Burnt sugar | Sweet",        sku:"T125AE014", slug:"creme-brulee-loose-leaf-cube-100g"},
+  {id:44,name:"Mint Mix",             type:"Herbal",  price:22, flavour:"Menthol | Sweet",                       sku:"T140AE019", slug:"mint-mix-loose-leaf-cube-50g"},
+  {id:45,name:"All Day Breakfast Decaf",type:"Black", price:18, flavour:"Earth | Malt | Bright",                 sku:"T121AE001", slug:"all-day-breakfast-decaffeinated-loose-leaf-cube-100g"},
+  {id:46,name:"Ajiri Tea",            type:"Black",   price:18, flavour:"Malt | Raisin | Robust",                sku:"T120AI063", slug:"ajiri-tea-loose-leaf-100g"},
+  {id:47,name:"Orange Pekoe",         type:"Black",   price:18, flavour:"Malt | Citrus | Bright",                sku:"T120AE017", slug:"orange-pekoe-loose-leaf-cube-100g"},
+  {id:48,name:"Darjeeling Second Flush",type:"Black", price:22, flavour:"Floral | Wood | Sweet",                 sku:"T121AE000", slug:"darjeeling-second-flush-loose-leaf-cube-100g"},
+  {id:49,name:"Choc Chip Chai",       type:"Chai",    price:22, flavour:"Chai | Chocolate | Spicy",              sku:"T125AE012", slug:"choc-chip-chai-loose-leaf-cube-100g"},
+  {id:50,name:"Turmeric Ginger Ninja",type:"Wellness",price:22, flavour:"Spicy | Earth | Sweet",                 sku:"T140AE207", slug:"turmeric-ginger-ninja-loose-leaf-cube-100g"},
+  {id:51,name:"Mango Cucumber",       type:"Fruit",   price:22, flavour:"Tropical | Fruity | Sweet",             sku:"T130AE202", slug:"mango-cucumber-loose-leaf-cube-100g"},
+  {id:52,name:"The Dreamer",          type:"Wellness",price:26, flavour:"Rose | Floral | Citrus",                sku:"T140AE213", slug:"the-dreamer-loose-leaf-cube-50g"},
+  {id:53,name:"Irish Breakfast",      type:"Black",   price:18, flavour:"Malt | Mineral | Bright",               sku:"T120AE011", slug:"irish-breakfast-loose-leaf-cube-100g"},
+  {id:54,name:"Sweetest Dreams",      type:"Wellness",price:22, flavour:"Floral | Tree fruit | Candy",           sku:"T140AE085", slug:"sweetest-dreams-loose-leaf-cube-50g"},
+  {id:55,name:"Japanese Sencha",      type:"Green",   price:26, flavour:"Seaweed | Mineral | Marine",            sku:"T110AE013", slug:"japanese-sencha-loose-leaf-cube-100g"},
+  {id:56,name:"Jade Mountain",        type:"Green",   price:22, flavour:"Roasted nuts | Nutty | Sweet",          sku:"T115AE059", slug:"jade-mountain-loose-leaf-cube-100g"},
+  {id:57,name:"China Jasmine",        type:"Green",   price:22, flavour:"Sugar snap peas | Jasmine | Floral",    sku:"T115AE004", slug:"china-jasmine-loose-leaf-cube-100g"},
+  {id:58,name:"The Glowgetter",       type:"Wellness",price:26, flavour:"Refreshing | Floral | Herby",           sku:"T140AE215", slug:"the-glowgetter-loose-leaf-cube-50g"},
+  {id:59,name:"Go Go Goa",            type:"Chai",    price:22, flavour:"Biscuit | Vanilla | Spicy",             sku:"T125AE134", slug:"go-go-goa-loose-leaf-cube-100g"},
+  {id:60,name:"Jasmine Pear",         type:"Green",   price:22, flavour:"Floral | Tree fruit | Fruity",          sku:"T115AE124", slug:"jasmine-pear-loose-leaf-cube-85g"},
+  {id:61,name:"Ruby Red Rosehip",     type:"Herbal",  price:22, flavour:"Floral | Sweet | Sour",                 sku:"T140AE027", slug:"ruby-red-rosehip-loose-leaf-cube-100g"},
+  {id:62,name:"Gunpowder Green",      type:"Green",   price:22, flavour:"Smoke | Mineral | Vegetal",             sku:"T110AE003", slug:"gunpowder-green-loose-leaf-cube-100g"},
+  {id:63,name:"Relax",                type:"Wellness",price:22, flavour:"Tart | Hay | Floral",                   sku:"T140AE025", slug:"relax-loose-leaf-cube-50g"},
+  {id:64,name:"Red, Green & Dreamy",  type:"Green",   price:22, flavour:"Stone fruit | Sweet | Earthy",          sku:"T135AE010", slug:"red-green-dreamy-loose-leaf-cube-100g"},
+  {id:65,name:"Sencha",               type:"Green",   price:18, flavour:"Mineral | Marine | Vegetal",            sku:"T110AE002", slug:"sencha-loose-leaf-cube-100g"},
+  {id:66,name:"Keemun",               type:"Black",   price:22, flavour:"Smoke | Raisin | Sweet",                sku:"T120AE099", slug:"keemun-loose-leaf-cube-100g"},
+  {id:67,name:"Be Balanced",          type:"Wellness",price:26, flavour:"Herbs | Raspberry | Earth",             sku:"T135AE042", slug:"be-balanced-loose-leaf-cube-65g"},
+  {id:68,name:"Strawberries & Cream", type:"Fruit",   price:22, flavour:"Berries | Sweet | Tart",                sku:"T130AE004", slug:"strawberries-cream-loose-leaf-cube-100g"},
+  {id:69,name:"The Belly Blend",      type:"Wellness",price:26, flavour:"Sweet | Cocoa | Earth",                 sku:"T125AE244", slug:"the-belly-blend-loose-leaf-cube-100g"},
+  {id:70,name:"Baxter's Hot Cross Buns",type:"Black", price:26, flavour:"Spice | Malt",                          sku:"T126AE040", slug:"baxters-hot-cross-buns-loose-leaf-cube-100g"},
+  {id:71,name:"Australian Breakfast", type:"Black",   price:26, flavour:"Earthy | Warming | Nutty",              sku:"T126AE043", slug:"australian-breakfast-loose-leaf-cube-100g"},
+  {id:72,name:"Moroccan Mint",        type:"Herbal",  price:22, flavour:"Minty | Fresh | Sweet",                 sku:"T140AE247", slug:"moroccan-mint-loose-leaf-gift-cube"},
+  {id:73,name:"Macadamia Brittle",    type:"Green",   price:22, flavour:"Honey | Roasted nuts | Sweet",          sku:"T135AE037", slug:"macadamia-brittle-loose-leaf-cube-100g"},
+  {id:74,name:"Japanese Gen Mai Cha", type:"Green",   price:26, flavour:"Roasted rice | Marine | Vegetal",       sku:"T110AE027", slug:"japanese-gen-mai-cha-sencha-loose-leaf-cube-100g"},
+  {id:75,name:"Oolong",               type:"Oolong",  price:18, flavour:"Honey | Roasted nuts | Wood",           sku:"T105AE003", slug:"oolong-loose-leaf-cube-100g"},
+  {id:76,name:"New York Breakfast",   type:"Black",   price:22, flavour:"Maple syrup | Malt | Sweet",            sku:"T125AE098", slug:"new-york-breakfast-loose-leaf-cube-100g"},
+  {id:77,name:"Double Choc Chip",     type:"Black",   price:22, flavour:"Sweet | Cocoa | Malt",                  sku:"T125AE???", slug:"double-choc-chip-loose-leaf-cube-100g"},
+  {id:78,name:"Korean Jeju Sejak",    type:"Green",   price:26, flavour:"Floral | Steamed greens | Chestnut",    sku:"T115AE???", slug:"korean-jeju-sejak-loose-leaf-cube-75g"},
+  {id:79,name:"Water Fairy Oolong",   type:"Oolong",  price:26, flavour:"Caramel | Stewed ripe fruits",          sku:"T106AE???", slug:"water-fairy-oolong-loose-leaf-cube-50g"},
+  {id:80,name:"Zesty Breakfast",      type:"Black",   price:22, flavour:"Refreshing | Zesty | Tart",             sku:"T125AE???", slug:"zesty-breakfast-loose-leaf-cube-100g"},
+];
+
+const TYPES=["All","Black","Green","Herbal","Fruit","Chai","Oolong","Rooibos","White","Wellness"];
+
+let R={}, W=new Set(), atype="All", openId=null, wishOnly=false, triedOnly=false, untriedOnly=false, darkMode=false;
+try{R=JSON.parse(localStorage.getItem("t2r6")||"{}");}catch(e){}
+try{W=new Set(JSON.parse(localStorage.getItem("t2w6")||"[]"));}catch(e){}
+try{darkMode=JSON.parse(localStorage.getItem("t2dark")||"false");}catch(e){}
+if(darkMode) document.getElementById("shell").classList.add("dark");
+
+function persist(){
+  try{localStorage.setItem("t2r6",JSON.stringify(R));localStorage.setItem("t2w6",JSON.stringify([...W]));}catch(e){}
+}
+function toast(m){
+  const t=document.getElementById("tst");
+  t.textContent=m;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),1800);
+}
+function onScr(){
+  document.getElementById("fab").classList.toggle("show",document.getElementById("lst").scrollTop>100);
+}
+function goTop(){document.getElementById("lst").scrollTo({top:0,behavior:"smooth"});}
+
+function toggleDark(){
+  darkMode=!darkMode;
+  document.getElementById("shell").classList.toggle("dark",darkMode);
+  const btn=document.getElementById("dmBtn");
+  btn.querySelector("i").className=darkMode?"ti ti-sun":"ti ti-moon";
+  try{localStorage.setItem("t2dark",JSON.stringify(darkMode));}catch(e){}
+}
+
+function toggleWF(){
+  wishOnly=!wishOnly;
+  document.getElementById("wfBtn").classList.toggle("on",wishOnly);
+  render();
+}
+function toggleTried(){
+  triedOnly=!triedOnly;
+  if(triedOnly) untriedOnly=false;
+  render();
+}
+function toggleUntried(){
+  untriedOnly=!untriedOnly;
+  if(untriedOnly) triedOnly=false;
+  render();
+}
+
+function renderFilters(){
+  document.getElementById("fbar").innerHTML=TYPES.map(t=>
+    `<button class="ft${atype===t?" on":""}" onclick="setT('${t}')">${t}</button>`
+  ).join("");
+}
+function setT(t){atype=t;renderFilters();render();}
+
+function renderStats(){
+  const scores=Object.keys(R).map(i=>R[i].score).filter(s=>s>0);
+  const tried=scores.length;
+  const untried=TEAS.length-tried;
+  const avg=tried?(scores.reduce((a,b)=>a+b,0)/tried).toFixed(1):"—";
+  const best=tried?Math.max(...scores):"—";
+  document.getElementById("sbar").innerHTML=`
+    <div class="sc sc-btn${triedOnly?" sc-on":""}" onclick="toggleTried()" title="Filter to tried teas">
+      <div class="sn o">${tried}</div><div class="sl">Tried${triedOnly?" ✕":""}</div>
+    </div>
+    <div class="sc sc-btn${untriedOnly?" sc-on":""}" onclick="toggleUntried()" title="Filter to untried teas">
+      <div class="sn">${untried}</div><div class="sl">Untried${untriedOnly?" ✕":""}</div>
+    </div>
+    <div class="sc"><div class="sn">${avg}</div><div class="sl">Avg</div></div>
+    <div class="sc"><div class="sn o">${best}</div><div class="sl">Best</div></div>`;
+}
+
+function getSorted(list){
+  const s=document.getElementById("srt").value, c=[...list];
+  if(s==="rd") return c.sort((a,b)=>(R[b.id]?.score||0)-(R[a.id]?.score||0));
+  if(s==="ra") return c.sort((a,b)=>(R[a.id]?.score||0)-(R[b.id]?.score||0));
+  if(s==="az") return c.sort((a,b)=>a.name.localeCompare(b.name));
+  if(s==="za") return c.sort((a,b)=>b.name.localeCompare(a.name));
+  if(s==="pa") return c.sort((a,b)=>a.price-b.price);
+  if(s==="pd") return c.sort((a,b)=>b.price-a.price);
+  return c;
+}
+function imgUrl(t){
+  if(t.sku.includes("???")) return "";
+  return `${IM}${t.sku}_${t.name.toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"")}_1.png?width=120`;
+}
+function render(){
+  const q=document.getElementById("srch").value.toLowerCase();
+  let list=getSorted(TEAS.filter(t=>{
+    if(wishOnly&&!W.has(t.id)) return false;
+    if(triedOnly&&!(R[t.id]?.score>0)) return false;
+    if(untriedOnly&&(R[t.id]?.score>0)) return false;
+    return(atype==="All"||t.type===atype)&&
+      (!q||t.name.toLowerCase().includes(q)||t.type.toLowerCase().includes(q)||t.flavour.toLowerCase().includes(q));
+  }));
+  document.getElementById("clbl").innerHTML=`<b>${list.length}</b> of ${TEAS.length}`;
+  const el=document.getElementById("lst");
+  if(!list.length){
+    const msg=triedOnly?"No rated teas yet — go try some!":untriedOnly?"You've tried everything! 🎉":wishOnly?"No wishlist teas match":"No teas match";
+    el.innerHTML=`<div class="empty"><i class="ti ti-leaf" style="font-size:28px;display:block;margin-bottom:10px;color:var(--t2om);"></i>${msg}</div>`;
+    renderStats();return;
+  }
+  el.innerHTML=list.map(t=>{
+    const rv=R[t.id], sc=rv?.score||0, cm=rv?.comment||"";
+    const isO=openId===t.id, isR=sc>0, isW=W.has(t.id);
+    const nbs=Array.from({length:10},(_,i)=>i+1).map(n=>
+      `<button class="nb${sc===n?" sel":""}" onclick="setSc(${t.id},${n})">${n}</button>`
+    ).join("");
+    const url=imgUrl(t);
+    const imgTag=url
+      ? `<img src="${url}" alt="${t.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'ifb\\'><i class=\\'ti ti-cup-filled\\'></i><span>${t.type}</span></div>'">`
+      : `<div class="ifb"><i class="ti ti-cup-filled"></i><span>${t.type}</span></div>`;
+    return `<div class="crd${isR?" rated":""}${isW?" wished":""}" id="c${t.id}">
+      <div class="ctop" onclick="tog(${t.id})">
+        <div class="imgw">${imgTag}</div>
+        <div class="ci">
+          <span class="tb ${t.type}">${t.type}</span>
+          <div class="cn">${t.name}</div>
+          <div class="cm">
+            <span class="cprice">$${t.price} AUD</span>
+            ${isR?`<span class="rb">${sc}/10</span>`:""}
+            ${isW&&!isR?`<span class="wb">Try next</span>`:""}
+          </div>
+          <div class="cd">${t.flavour}</div>
+        </div>
+        <div class="cr">
+          <button class="wbt${isW?" on":""}" onclick="togW(event,${t.id})" title="${isW?"Remove from wishlist":"Add to try next"}">
+            <i class="ti ti-bookmark${isW?"-filled":""}"></i>
+          </button>
+          <i class="ti ti-chevron-${isO?"up":"down"} chv"></i>
+        </div>
+      </div>
+      <div class="cpnl${isO?" open":""}">
+        <div class="rlbl">Your rating</div>
+        <div class="nbr">${nbs}</div>
+        <textarea class="cmt" id="cm${t.id}" placeholder="Tasting notes, brew tips, occasions…">${cm}</textarea>
+        <div class="pbtns">
+          <button class="svb" onclick="doSave(${t.id})">Save</button>
+          ${isR?`<button class="clb" onclick="clrR(${t.id})">Clear</button>`:""}
+        </div>
+        <div class="lnk"><a class="t2l" href="${UB}${t.slug}" target="_blank"><i class="ti ti-external-link" style="font-size:12px;"></i> View on T2</a></div>
+      </div>
+    </div>`;
+  }).join("");
+  renderStats();
+}
+function tog(id){
+  openId=openId===id?null:id;render();
+  if(openId) setTimeout(()=>{const e=document.getElementById("c"+id);if(e)e.scrollIntoView({behavior:"smooth",block:"nearest"});},50);
+}
+function togW(e,id){
+  e.stopPropagation();
+  if(W.has(id))W.delete(id);else W.add(id);
+  persist();render();
+}
+function setSc(tid,sc){
+  if(!R[tid])R[tid]={score:0,comment:""};
+  R[tid].score=sc;persist();render();
+}
+function doSave(tid){
+  const cm=document.getElementById("cm"+tid)?.value||"";
+  if(!R[tid])R[tid]={score:0,comment:""};
+  R[tid].comment=cm;persist();
+  toast(R[tid].score>0?`Saved ${R[tid].score}/10 ✓`:"Comment saved");
+  render();
+}
+function clrR(tid){delete R[tid];persist();toast("Rating cleared");render();}
+function openExp(){
+  const rated=TEAS.filter(t=>R[t.id]?.score>0).sort((a,b)=>R[b.id].score-R[a.id].score);
+  const wish=TEAS.filter(t=>W.has(t.id)&&!(R[t.id]?.score>0));
+  let out="T2 TEA RATINGS\n"+"─".repeat(26)+"\n\n";
+  if(rated.length){
+    out+="RATED\n";
+    rated.forEach(t=>{
+      const rv=R[t.id];
+      out+=`${rv.score}/10  ${t.name}\n`;
+      if(rv.comment) out+=`      "${rv.comment}"\n`;
+    });
+  }
+  if(wish.length){
+    out+="\nWANT TO TRY\n";
+    wish.forEach(t=>{out+=`  • ${t.name} ($${t.price})\n`;});
+  }
+  if(!rated.length&&!wish.length) out+="No ratings or wishlist items yet.";
+  document.getElementById("etxt").value=out;
+  document.getElementById("mbg").classList.add("show");
+}
+function closeExp(){document.getElementById("mbg").classList.remove("show");}
+function doCopy(){
+  const txt=document.getElementById("etxt").value;
+  navigator.clipboard.writeText(txt).then(()=>toast("Copied ✓")).catch(()=>{
+    document.getElementById("etxt").select();document.execCommand("copy");toast("Copied ✓");
+  });
+}
+
+// init dark mode icon
+if(darkMode) document.getElementById("dmBtn").querySelector("i").className="ti ti-sun";
+renderFilters();render();
+</script>
+</body>
+</html>
